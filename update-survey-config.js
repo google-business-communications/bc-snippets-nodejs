@@ -52,7 +52,7 @@ async function main() {
       'template_question_id_2',
     ],
     customSurveys: {
-      <var>LOCALE</var>: {
+      'en': {
         customQuestions: [
           {
             name: 'custom_question_id_1',
