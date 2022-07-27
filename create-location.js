@@ -45,11 +45,12 @@ async function main() {
   const authClient = await initCredentials();
 
   const brandName = 'brands/' + BRAND_ID;
+  const agentName = 'brands/' + BRAND_ID + 'agents/' + AGENT_ID;
 
   if (authClient) {
     const locationObject = {
       placeId: PLACE_ID,
-      agent: 'My agent',
+      agent: agentName,
       defaultLocale: 'en',
     };
 
