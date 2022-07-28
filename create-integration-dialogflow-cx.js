@@ -13,8 +13,8 @@
 //// limitations under the License.
 
 /**
- * This code snippet updates the defaultLocale of a Business Messages agent.
- * Read more: https://developers.google.com/business-communications/business-messages/reference/business-communications/rest/v1/brands.locations/patch
+ * This code snippet creates a Dialogflow CX integration.
+ * Read more: https://developers.google.com/business-communications/business-messages/guides/how-to/integrate/dialogflow?method=api#dialogflow_cx
  *
  * This code is based on the https://github.com/google-business-communications/nodejs-businesscommunications Node.js
  * Business Communications client library.
@@ -24,11 +24,14 @@
  * Edit the values below:
  */
 const BRAND_ID = 'EDIT_HERE';
-const LOCATION_ID = 'EDIT_HERE';
+const AGENT_ID = 'EDIT_HERE';
+const DIALOGFLOW_CX_AGENT_ID = 'EDIT_HERE'
+const DIALOGFLOW_CX_PROJECT_ID = 'EDIT_HERE'
 const PATH_TO_SERVICE_ACCOUNT_KEY = './service_account_key.json';
 
 const businesscommunications = require('businesscommunications');
 const {google} = require('googleapis');
+const uuidv4 = require('uuid').v4;
 
 // Initialize the Business Communications API
 const bcApi = new businesscommunications.businesscommunications_v1.Businesscommunications({});
@@ -43,23 +46,29 @@ const privatekey = require(PATH_TO_SERVICE_ACCOUNT_KEY);
 
 async function main() {
   const authClient = await initCredentials();
+  const agentName = 'brands/' + BRAND_ID + '/agents/' + AGENT_ID;
 
   if (authClient) {
-    const locationObject = {
-      defaultLocale: 'en'
+    const integrationObject = {
+      dialogflowCxIntegration: {
+        dialogflowProjectId: DIALOGFLOW_CX_PROJECT_ID,
+        dialogflowAgentId: DIALOGFLOW_CX_AGENT_ID,
+        autoResponseStatus: 'ENABLED'
+      }
     };
 
+    // Setup the parameters for the API call
     const apiParams = {
       auth: authClient,
-      name: 'brands/' + BRAND_ID + '/locations/' + LOCATION_ID,
-      resource: locationObject,
-      updateMask: 'defaultLocale',
+      parent: agentName,
+      resource: integrationObject
     };
 
-    bcApi.brands.locations.patch(apiParams, {}, (err, response) => {
+    bcApi.brands.agents.integrations.create(apiParams, {}, (err, response) => {
       if (err !== undefined && err !== null) {
         console.dir(err);
       } else {
+        // Agent created
         console.log(response.data);
       }
     });
